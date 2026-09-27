@@ -17,7 +17,7 @@ const Organization = new Schema({
     name: { type: String, unique: true, required: true },
     description: { type: String, required: true },
     members: { type: Number, default: 0 },
-    admins: { type: Number, default: 0 }
+    admin: { type: Schema.Types.ObjectId, ref: "admins", required: true }
 })
 
 const Boards = new Schema({
