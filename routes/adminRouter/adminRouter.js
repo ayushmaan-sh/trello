@@ -6,7 +6,7 @@ const bcrypt = require("bcrypt")
 
 const JWT_SECRET = process.env.ADMIN_SECRET_KEY
 
-const { adminModel } = require("../../database/database")
+const { adminModel, orgModel } = require("../../database/database")
 const { adminMiddleware } = require("../../middleware/adminMiddleware")
 const adminRouter = Router()
 
@@ -80,9 +80,38 @@ adminRouter.post("/signin", async (req, res)=>{
 })
 
 adminRouter.post("/create-organization", adminMiddleware, async (req, res)=>{
-    res.json({
-        message: "Middleware is working..."
-    })
+    const name = req.body.name
+    const description = req.body.description
+    const members = req.body.members
+    const admin = req.adminId
+
+    try {
+        const checkName = await orgModel.findOne({
+            name: name
+        })
+
+        if(checkName){
+            return res.status(403).send({
+                message: "Company with name already exist. Try Again!"
+            })
+        } else {
+
+            await orgModel.create({
+                name: name,
+                description: description,
+                members: members,
+                admin: admin
+            })
+
+            return res.json({
+                message: "Company created!"
+            })
+        }
+
+
+    } catch (error) {
+        
+    }
 })
 
 module.exports = {
