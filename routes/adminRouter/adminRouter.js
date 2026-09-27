@@ -7,6 +7,7 @@ const bcrypt = require("bcrypt")
 const JWT_SECRET = process.env.ADMIN_SECRET_KEY
 
 const { adminModel } = require("../../database/database")
+const { adminMiddleware } = require("../../middleware/adminMiddleware")
 const adminRouter = Router()
 
 adminRouter.post("/signup", async (req, res)=>{
@@ -76,6 +77,12 @@ adminRouter.post("/signin", async (req, res)=>{
             error: error.message
         })
     }
+})
+
+adminRouter.post("/create-organization", adminMiddleware, async (req, res)=>{
+    res.json({
+        message: "Middleware is working..."
+    })
 })
 
 module.exports = {
