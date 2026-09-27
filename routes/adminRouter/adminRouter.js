@@ -96,7 +96,7 @@ adminRouter.post("/create-organization", adminMiddleware, async (req, res)=>{
             })
         } else {
 
-            await orgModel.create({
+            const newOrg = await orgModel.create({
                 name: name,
                 description: description,
                 members: members,
@@ -104,13 +104,16 @@ adminRouter.post("/create-organization", adminMiddleware, async (req, res)=>{
             })
 
             return res.json({
-                message: "Company created!"
+                message: "Company created!",
+                orgId: newOrg._id
             })
         }
 
 
     } catch (error) {
-        
+        return res.status(403).send({
+            error: error.message
+        })
     }
 })
 
